@@ -18,34 +18,33 @@
         <li id="item5">item5</li>
     </ul>
 
-    <script>            
-       
-        window.xinDom = {}
-        xinDom.getSiblings = function(node) {
-
-            let allChildren = node.parentNode.children
+    <script>
+        
+        Node.prototype.getSiblings = function() {
+        
+            let allChildren = this.parentNode.children
             let arr = { length: 0 }
-
+            
             for (let i in allChildren) {
-                if (allChildren[i] != node) {
-                    arr[arr.length] = allChildren[i]
-                    arr.length += 1
+                if (allChildren[i] != this) {
+                arr[arr.length] = allChildren[i]
+                arr.length += 1
                 }
             }
 
             return arr
         }
 
-        xinDom.addClass = function(node, thoseClass) {
-            //   thoseClass.forEach( value => node.classList.add(value) )
-            for (let key in thoseClass) {
+        Node.prototype.changeClass = function(thoseClass) {
+            // thoseClass.forEach( value => this.classList.add(value) )
+            for(let key in thoseClass) {
                 let operate = thoseClass[key] ? 'add' : 'remove'
-                node.classList[operate](key)
+                this.classList[operate](key)
             }
         }
 
-        console.log( xinDom.getSiblings(item5) )
-        xinDom.addClass({ a: true, b: false, d: true})
+        console.log( item3.getSiblings() )
+        item4.changeClass({ a: true, b: true, d: false})
 
     </script>
 </body>
