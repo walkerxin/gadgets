@@ -7,6 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="封装函数，使用命名空间(此处为xinDom)">
     <title>初探jQuery</title>
+
+    <style>
+        .red { color: red;}
+        .big { font-size: 24px }
+        .green { color: green; }
+    </style>
 </head>
 
 <body>
@@ -19,32 +25,45 @@
     </ul>
 
     <script>
+
+        window.BetterNode = function(node) {
+
+            return {
+                getSiblings: function() {
         
-        Node.prototype.getSiblings = function() {
-        
-            let allChildren = this.parentNode.children
-            let arr = { length: 0 }
-            
-            for (let i in allChildren) {
-                if (allChildren[i] != this) {
-                arr[arr.length] = allChildren[i]
-                arr.length += 1
+                    let allChildren = node.parentNode.children
+                    let arr = { length: 0 }
+                    
+                    for (let i in allChildren) {
+                        if (allChildren[i] != node) {
+                        arr[arr.length] = allChildren[i]
+                        arr.length += 1
+                        }
+                    }
+
+                    return arr
+                },
+                changeClass: function(thoseClass) {
+                    // thoseClass.forEach( value => this.classList.add(value) )
+                    for(let key in thoseClass) {
+                        let operate = thoseClass[key] ? 'add' : 'remove'
+                        node.classList[operate](key)
+                    }
+                },
+                setText: function(text) {
+                    if(text) {
+                        node.textContent = text
+                    }else {
+                        return node.textContent
+                    }
                 }
             }
-
-            return arr
         }
 
-        Node.prototype.changeClass = function(thoseClass) {
-            // thoseClass.forEach( value => this.classList.add(value) )
-            for(let key in thoseClass) {
-                let operate = thoseClass[key] ? 'add' : 'remove'
-                this.classList[operate](key)
-            }
-        }
-
-        console.log( item3.getSiblings() )
-        item4.changeClass({ a: true, b: true, d: false})
+        var node2 = BetterNode(item3)
+        console.log( node2.getSiblings() )
+        node2.changeClass({ red: true, big: true, green: false})
+        node2.setText('h1')
 
     </script>
 </body>
