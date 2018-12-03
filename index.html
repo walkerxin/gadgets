@@ -5,7 +5,7 @@
     <meta charset="zh-Hans">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="封装函数，使用命名空间(此处为xinDom)">
+    <meta name="description" content="封装函数，(封装的函数是新创建的接口返回中的API)">
     <title>初探jQuery</title>
 
     <style>
@@ -24,46 +24,90 @@
         <li id="item5">item5</li>
     </ul>
 
+    <div>Hello World</div>
+
     <script>
 
-        window.BetterNode = function(node) {
+        function BetterNode(nodeOrSelector) {
+
+            var nodes = {}
+            if(typeof nodeOrSelector === 'string') {
+                
+                var tmp = document.querySelectorAll(nodeOrSelector)
+                nodes.length = tmp.length
+                for(var i=0; i<tmp.length; i++) {
+                    nodes[i] = tmp[i]
+                }
+
+            }else if(nodeOrSelector instanceof Node) {
+                nodes = {
+                    0: nodeOrSelector,
+                    length: 1
+                }
+            }
 
             return {
                 getSiblings: function() {
-        
-                    let allChildren = node.parentNode.children
+                    
                     let arr = { length: 0 }
                     
-                    for (let i in allChildren) {
-                        if (allChildren[i] != node) {
-                        arr[arr.length] = allChildren[i]
-                        arr.length += 1
+                    for(var i=0; i<nodes.length; i++) {                        
+
+                        let allChildren = nodes[i].parentNode.children
+                    
+                        for (let n in allChildren) {
+                            if (allChildren[n].nodeType === 1 && allChildren[n] != nodes[i]) {
+                                arr[arr.length] = allChildren[n]
+                                arr.length += 1
+                            }
                         }
                     }
 
                     return arr
                 },
-                changeClass: function(thoseClass) {
-                    // thoseClass.forEach( value => this.classList.add(value) )
+                changeClass: function(thoseClass) {                    
                     for(let key in thoseClass) {
                         let operate = thoseClass[key] ? 'add' : 'remove'
-                        node.classList[operate](key)
+                        for(var i=0; i<nodes.length; i++) {
+                            nodes[i].classList[operate](key)
+                        }
                     }
                 },
-                setText: function(text) {
-                    if(text) {
-                        node.textContent = text
+                addClass: function(thoseClass) {
+
+                    if(typeof thoseClass === 'string') {
+                        for(var i=0; i<nodes.length; i++) {
+                            nodes[i].classList.add(thoseClass)
+                        }
+                    }else if(Array.isArray(thoseClass)) {
+                        for(var i=0; i<nodes.length; i++) {                            
+                            thoseClass.forEach( value => nodes[i].classList.add(value) )
+                        }
+                    }
+
+                },
+                setText: function(content) {
+                    if(content) {
+                        for(var i=0; i<nodes.length; i++) {
+                            nodes[i].textContent = content
+                        }
                     }else {
-                        return node.textContent
+                        var cntArr = []
+                        for(var i=0; i<nodes.length; i++) {
+                            cntArr.push(nodes[i].textContent)
+                        }
+                        return cntArr
                     }
                 }
             }
         }
 
-        var node2 = BetterNode(item3)
+        var node2 = BetterNode(item4)
         console.log( node2.getSiblings() )
         node2.changeClass({ red: true, big: true, green: false})
         node2.setText('h1')
+        
+        document.write(BetterNode('li').setText())
 
     </script>
 </body>
