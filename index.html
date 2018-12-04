@@ -28,7 +28,7 @@
 
     <script>
 
-        function BetterNode(nodeOrSelector) {
+        window.jQuery = function(nodeOrSelector) {
 
             var nodes = {}
             if(typeof nodeOrSelector === 'string') {
@@ -86,7 +86,7 @@
                     }
 
                 },
-                setText: function(content) {
+                text: function(content) {
                     if(content) {
                         for(var i=0; i<nodes.length; i++) {
                             nodes[i].textContent = content
@@ -102,12 +102,18 @@
             }
         }
 
-        var node2 = BetterNode(item4)
+        window.$ = jQuery
+
+        var node2 = jQuery(item4)
         console.log( node2.getSiblings() )
         node2.changeClass({ red: true, big: true, green: false})
-        node2.setText('h1')
+        node2.text('Hello World')
         
-        document.write(BetterNode('li').setText())
+        document.write($('li').text())
+
+        var $div = $('div')
+        $div.addClass('red') // 可将所有 div 的 class 添加一个 red
+        $div.text('hi') // 可将所有 div 的 textContent 变为 hi
 
     </script>
 </body>
