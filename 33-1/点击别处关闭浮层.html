@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>点击别处关闭浮层</title>
+    <!--要求：
+        1. 点击按钮弹出浮层
+        2. 点击别处关闭浮层
+        3. 点击浮层时，浮层不得关闭
+        4. 再次点击按钮，浮层消失
+    -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 20px;         
+        }
+        .popover {
+            position: absolute;
+            top: -7px;
+            left: 100%;
+            margin-left: 8px;
+            white-space: nowrap;
+            border: 1px solid red;
+            padding: 10px
+        }
+        .popover::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: -16px;
+            border: 8px solid transparent;
+            border-right-color: red;
+        }
+        .popover::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: -14px;
+            border: 8px solid transparent;
+            border-right-color: white;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="wrapper">
+        <button id="clickMe">点我</button>
+        <div id="popoverId" class="popover" hidden>浮层</div>
+    </div>
+
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script>
+        $('#clickMe').on('click', function(e) {
+            $('#popoverId').toggle()
+        })
+
+        $('.wrapper').on( 'click', e => e.stopPropagation() )
+
+        $(document).on('click', function(e) {
+            $('#popoverId').hide()
+        })
+    </script>
+</body>
+</html>
