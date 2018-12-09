@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>点击别处关闭浮层</title>
+    <title>点击别处关闭浮层 - 事件模型【捕获-冒泡】</title>
     <!--要求：
         1. 点击按钮弹出浮层
         2. 点击别处关闭浮层
@@ -58,13 +58,15 @@
     <script>
         $('#clickMe').on('click', function(e) {
             $('#popoverId').toggle()
+
+            $(document).one('click', function(e) {                
+                $('#popoverId').hide()
+            })                
         })
 
+        //  还是要阻止冒泡，setTimeout 0 点完一次后就绑定上了
         $('.wrapper').on( 'click', e => e.stopPropagation() )
 
-        $(document).on('click', function(e) {
-            $('#popoverId').hide()
-        })
     </script>
 </body>
 </html>
