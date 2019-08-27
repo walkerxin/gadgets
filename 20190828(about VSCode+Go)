@@ -1,2 +1,20 @@
-用 Go 实践时就遇到了问题，Atom 的 go-plus是挺好用，但Atom不好用，
+用 Go 实践时就遇到了问题，Atom 的 go-plus是挺好，但Atom安装某些package太慢，转不成功（貌似被墙），需要找配置；
 于是使用 VSCode 作为 Go 的 IDE, 安装了 Go 插件，但是还提示安装好多的扩展，但是无一例外全都安装失败（应该是被墙了） 。
+1. VSCode 中配置 HTTP:Proxy 即可安装成功 Go plugin 的依赖库
+2. 修正依赖包安装的位置
+但是发现默认安装在了C盘：C:\Users\Weben\go\bin，这是因为1.8及其之后的版本安装时添加了环境变量配置，GOPATH为%USERPROFILE%/go，PATH加上%USERPROFILE%/go，
+因此还是需要我们重新配置过GOPATH 和 Path。
+
+3. VSCode代码补全提示配置，即可自动添加未导入的包
+
+```
+    "go.autocompleteUnimportedPackages": true,
+    "go.gocodePackageLookupMode": "go",
+    "go.gotoSymbol.includeImports": true,
+    "go.useCodeSnippetsOnFunctionSuggest": true,
+    "go.inferGopath": true,
+    // "go.gopath": "C:/user/appData/go",
+    "go.useCodeSnippetsOnFunctionSuggestWithoutType": true
+```
+
+包和库的区别？
