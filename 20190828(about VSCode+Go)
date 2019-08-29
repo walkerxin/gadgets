@@ -1,10 +1,10 @@
 用 Go 实践时就遇到了问题，Atom 的 go-plus是挺好，但Atom安装某些package太慢，转不成功（貌似被墙），需要找配置；
 于是使用 VSCode 作为 Go 的 IDE, 安装了 Go 插件，但是还提示安装好多的扩展，但是无一例外全都安装失败（应该是被墙了） 。
+Win7 环境
 1. VSCode 中配置 HTTP:Proxy 即可安装成功 Go plugin 的依赖库
-2. 修正依赖包安装的位置
-但是发现默认安装在了C盘：C:\Users\Weben\go\bin，这是因为1.8及其之后的版本安装时添加了环境变量配置，GOPATH为%USERPROFILE%/go，PATH加上%USERPROFILE%/go，
+2. 配置环境变量，修正依赖包安装的位置
+    但是发现默认安装在了C盘：C:\Users\Weben\go\bin，这是因为1.8及其之后的版本安装时添加了环境变量配置，GOPATH为%USERPROFILE%/go，PATH加上%USERPROFILE%/go，
 因此还是需要我们重新配置过GOPATH 和 Path。
-
 3. VSCode代码补全提示配置，即可自动添加未导入的包
 
 ```
@@ -18,3 +18,28 @@
 ```
 
 包和库的区别？
+GOROOT: Go 的安装目录；但分为系统环境和 VSCode 环境
+GOPATH: 下载的包和二进制文件所在的位置；
+toolsGopath(setting.json): go扩展的依赖会下载到这个路径
+
+1. Ubuntu 中配置环境变量（当前用户永久生效）
+vim ~/.bash_profile
+export GOROOT="/usr/local/go"
+export GOPATH="$GOROOT/goPath"
+export PATH="$PATH:$GOROOT/bin"
+
+source ~/.bash_profile -- 不用重启，立即生效配置
+
+2. Linux中给VSCode配置了代理，但仍安装失败，失败原因是Linux中使用sslocal的是 socks 非http代理
+参考linux下使用privoxy将socks转为http代理(https://www.cnblogs.com/liuxuzzz/p/5324749.html)
+1. 安装 privoxy
+2. 修改 provoxy配置，vim /etc/privoxy/config
+    ① 加入一行shadowsocks配置：forward-socks5  /       127.0.0.1:1080 .
+    ② 下面加入一行配置（表示privoxy监听本机8118端口，http代理为 http//localhost:8118）
+        listen-address localhost:8118
+3. 重启 privoxy
+    sudo systemctl restart privoxy.serivce
+4. 配置VSCode http.proxy
+
+还有一种采用手动下载的方式：以下地址下载包然后进行拷贝到 GOPATH 中
+git clone git@github.com:golang/tools.git
